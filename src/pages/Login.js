@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import FormLogin from "../components/FormLogin";
+import { AuthContext } from "../contexts/AuthContext";
+import { helpHttp } from "../utils/httpHelper";
 
 const LoginPage = () => {
-  const handleSubmit = (formValues) => {
-    console.log(formValues);
+  const { setAuth, saveUser } = useContext(AuthContext);
+
+  const handleSubmit = async ({ email, password }) => {
+    // Llamada al Endpoint de login del servidor
+    const response = await helpHttp().post(
+      "https://curso-react-backend-una.herokuapp.com/v1/auth/login",
+      {
+        body: {
+          email,
+          password,
+        },
+        headers: {
+          "content-type": "application/json",
+          Accept: "application/json",
+        },
+      }
+    );
+
+    // Caso exitoso: almancenar la info resultante en el AuthContext
+    setAuth(response.tokens.access.token);
+    saveUser(response.user);
   };
 
   return (
