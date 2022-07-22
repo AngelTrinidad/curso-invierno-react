@@ -6,16 +6,12 @@ export const AuthContext = createContext({});
 
 // Crear el provider que es necesario para utilizar el contexto
 export const AuthProvider = ({ children }) => {
-  const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem(JWT_KEYS.accessToken);
-    const userFromLS = localStorage.getItem(JWT_KEYS.user);
-
-    setIsLogged(!!accessToken);
-    setUser(!!userFromLS ? JSON.parse(userFromLS) : null);
-  }, []);
+  const [isLogged, setIsLogged] = useState(
+    localStorage.getItem(JWT_KEYS.accessToken) || false
+  );
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem(JWT_KEYS.user)) || null
+  );
 
   const setAuth = (accessToken) => {
     setIsLogged(true);
